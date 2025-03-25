@@ -1,1 +1,62 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тренажер набора текста (Русский Colemak)</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Тренажер набора текста (Русский Colemak)</h1>
 
+        <!-- Счетчик слов, таймер, процент ошибок и скорость -->
+        <div class="stats">
+            <div class="counter">Слов: <span id="word-counter">0</span></div>
+            <div class="timer">Время: <span id="timer">60</span> сек</div>
+            <div class="error-rate">Ошибки: <span id="error-rate">0%</span></div>
+            <div class="speed">Скорость: <span id="speed">0</span> зн/мин</div>
+        </div>
+
+        <!-- Блок для отображения слов -->
+        <div class="word-display">
+            <div class="word-row">
+                <div class="previous-word">Прошлое слово</div>
+                <div class="next-next-word">Слово после следующего</div>
+            </div>
+            <div class="next-word">
+                <span class="typed"></span><span class="untyped"></span>
+            </div>
+        </div>
+
+        <!-- Поле ввода -->
+        <div class="input-container">
+            <input type="text" id="text-input" placeholder="Введите слово здесь..." autocomplete="off">
+        </div>
+
+        <!-- Таблица последних 10 наборов -->
+        <div class="recent-sets">
+            <h2>Последние 10 наборов</h2>
+            <table id="recent-sets-table">
+                <thead>
+                    <tr>
+                        <th>№</th>
+                        <th>Слов</th>
+                        <th>Ошибки</th>
+                        <th>Скорость (зн/мин)</th>
+                    </tr>
+                </thead>
+                <tbody id="recent-sets-body"></tbody>
+            </table>
+        </div>
+
+        <!-- Плейсхолдер для изображения клавиатуры -->
+        <div class="keyboard-image">
+            <img src="keyboard-placeholder.png" alt="Раскладка клавиатуры">
+            <p>Здесь будет изображение клавиатуры с раскладкой</p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
