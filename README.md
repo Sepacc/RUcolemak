@@ -11,7 +11,7 @@
 И, собственно, моя любимая версия - ЯХЗ от Андрея - https://dtf.ru/u/511734-andrei/1190286-naidena-ubiica-icuken-raskladki-ili-colemak-po-russki
 ## Циферки и таблицы
 
-![Частота](https://leonardo.osnova.io/607b5a3a-a10c-5c07-b863-383342947428/-/scale_crop/592x/-/format/webp/](https://imgur.com/a/joTNmZf)](https://imgur.com/a/PhpPMpP)
+![Частота](https://imgur.com/a/PhpPMpP)
 
 # Установка
 wip
