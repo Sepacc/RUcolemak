@@ -23,11 +23,14 @@
 ## Циферки и таблицы
 Сравнение распределения частоты букв в QWERTY и COLEMAK
 
-![img](https://leonardo.osnova.io/72f66a57-9b97-5582-8724-45f107bac3a3)
+![image](https://github.com/user-attachments/assets/398e3de4-dc3c-4ca0-9cf4-0fc02c20bbf7)
+
 
 А так же ЙЦУКЕН и ЯХЗ
 
-![img](https://leonardo.osnova.io/607b5a3a-a10c-5c07-b863-383342947428)
+![607b5a3a-a10c-5c07-b863-383342947428](https://github.com/user-attachments/assets/3b84dec0-b07c-47c8-a56e-225c40c2f4c5)
+
+Как видите - ЯХЗ достаточно близко к колемаку распределяет буквы, не нагружая пальцы так сильно, как ЙЦУКЕН.
 
 # Установка
 wip
