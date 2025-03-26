@@ -27,7 +27,7 @@
 
 А так же ЙЦУКЕН и ЯХЗ
 
-![img](https://imgur.com/a/colemakru-PhpPMpP)
+![img](https://leonardo.osnova.io/607b5a3a-a10c-5c07-b863-383342947428)
 
 # Установка
 wip
