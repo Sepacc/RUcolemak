@@ -1,12 +1,46 @@
-// Список коротких русских слов (3-5 букв)
-const words = [
+// Списки слов
+const commonWords = [
     "дом", "кот", "лес", "мир", "сад",
     "день", "ночь", "путь", "звук", "цвет",
     "вода", "огонь", "небо", "земля", "луна",
     "река", "свет", "тень", "поле", "трава"
 ];
 
+const bigrams = [
+    "ба", "бо", "бу", "бы", "ва", "ве", "ви", "во",
+    "га", "го", "гу", "да", "де", "ди", "до", "ду",
+    "жа", "же", "жи", "за", "зе", "зи", "зо", "зу",
+    "ка", "ке", "ки", "ко", "ку", "ла", "ле", "ли",
+    "ма", "ме", "ми", "мо", "му", "на", "не", "ни",
+    "но", "ну", "па", "пе", "пи", "по", "пу", "ра",
+    "ре", "ри", "ро", "ру", "са", "се", "си", "со",
+    "су", "та", "те", "ти", "то", "ту", "фа", "фе",
+    "фи", "фо", "фу", "ха", "хе", "хи", "хо", "ху"
+];
+
+const trigrams = [
+    "бар", "бег", "бит", "бок", "бор", "буд", "бум",
+    "вар", "век", "вес", "вид", "воз", "вуз",
+    "гар", "гем", "гид", "гол", "гон", "гуд",
+    "дар", "дед", "дек", "дим", "дом", "дуб",
+    "жар", "жук", "зал", "зев", "зик", "зоб",
+    "как", "кед", "кит", "код", "кол", "ком",
+    "лак", "лев", "лис", "лоб", "лук", "люк",
+    "мак", "мел", "миг", "мод", "мол", "мор",
+    "над", "нег", "ник", "нос", "нур", "пад",
+    "пек", "пик", "пол", "пуд", "рак", "рем",
+    "рис", "род", "рок", "сад", "сев", "сир",
+    "сок", "суп", "так", "тек", "тик", "ток",
+    "фал", "фен", "фир", "фок", "хак", "хол"
+];
+
 // Элементы DOM
+const wordSetSelection = document.querySelector('#word-set-selection');
+const wordSetSelect = document.querySelector('#word-set');
+const startGameButton = document.querySelector('#start-game');
+const statsElement = document.querySelector('#stats');
+const wordDisplayElement = document.querySelector('#word-display');
+const inputContainerElement = document.querySelector('#input-container');
 const previousWordElement = document.querySelector('.previous-word');
 const nextWordElement = document.querySelector('.next-word');
 const typedElement = document.querySelector('.typed');
@@ -17,14 +51,10 @@ const wordCounterElement = document.querySelector('#word-counter');
 const timerElement = document.querySelector('#timer');
 const errorRateElement = document.querySelector('#error-rate');
 const speedElement = document.querySelector('#speed');
-const nicknameForm = document.querySelector('#nickname-form');
-const nicknameInput = document.querySelector('#nickname-input');
-const passwordInput = document.querySelector('#password-input');
-const submitScoreButton = document.querySelector('#submit-score');
-const leaderboardBody = document.querySelector('#leaderboard-body');
-const userRankElement = document.querySelector('#user-rank');
+const recentSetsBody = document.querySelector('#recent-sets-body');
 
 // Переменные для отслеживания состояния
+let words = commonWords; // Текущий набор слов (по умолчанию — обычные слова)
 let currentIndex = 0;
 let wordCount = 0;
 let timeLeft = 60; // 60 секунд
@@ -34,9 +64,10 @@ let totalAttempts = 0; // Общее количество попыток вво�
 let errorAttempts = 0; // Количество ошибочных попыток
 let correctCharacters = 0; // Количество символов в правильно введенных словах
 let startTime = null; // Время начала ввода
+let setNumber = 1; // Номер текущей попытки
 
-// Загрузка таблицы лидеров из localStorage
-let leaderboard = JSON.parse(localStorage.getItem('leaderboard')) || [];
+// Загрузка последних 10 наборов из localStorage
+let recentSets = JSON.parse(localStorage.getItem('recentSets')) || [];
 
 // Функция для обновления отображаемых слов
 function updateWords() {
@@ -129,69 +160,106 @@ function checkWord(inputText) {
 // Функция для окончания игры
 function endGame() {
     textInput.disabled = true;
-    nicknameForm.style.display = 'block';
     updateSpeed(); // Финальное обновление скорости
+
+    // Сохраняем результат в таблицу последних наборов
+    const errorRate = totalAttempts > 0 ? (errorAttempts / totalAttempts) * 100 : 0;
+    const speed = parseInt(speedElement.textContent);
+    updateRecentSets(wordCount, errorRate, speed);
+
+    // Сбрасываем игру
+    setTimeout(() => {
+        wordCount = 0;
+        timeLeft = 60;
+        totalAttempts = 0;
+        errorAttempts = 0;
+        correctCharacters = 0;
+        startTime = null;
+        wordCounterElement.textContent = wordCount;
+        timerElement.textContent = timeLeft;
+        errorRateElement.textContent = '0%';
+        speedElement.textContent = '0';
+        textInput.disabled = false;
+        updateWords();
+
+        // Показываем выбор набора слов
+        wordSetSelection.style.display = 'block';
+        statsElement.style.display = 'none';
+        wordDisplayElement.style.display = 'none';
+        inputContainerElement.style.display = 'none';
+    }, 1000); // Задержка 1 секунда, чтобы пользователь увидел финальный результат
 }
 
-// Функция для обновления таблицы лидеров
-function updateLeaderboard(nickname, score, errorRate, speed) {
+// Функция для обновления таблицы последних 10 наборов
+function updateRecentSets(score, errorRate, speed) {
     const entry = {
-        nickname: nickname,
-        password: passwordInput.value, // Сохраняем пароль для проверки
+        setNumber: setNumber++,
         score: score,
         errorRate: Math.round(errorRate),
         speed: speed,
         timestamp: Date.now()
     };
 
-    // Проверяем, существует ли уже запись с таким никнеймом и паролем
-    const existingEntryIndex = leaderboard.findIndex(
-        entry => entry.nickname === nickname && entry.password === passwordInput.value
-    );
-
-    if (existingEntryIndex !== -1) {
-        // Если запись существует, перезаписываем её
-        leaderboard[existingEntryIndex] = entry;
-    } else {
-        // Иначе добавляем новую запись
-        leaderboard.push(entry);
-    }
-
-    // Сортируем по количеству слов (по умолчанию)
-    leaderboard.sort((a, b) => b.score - a.score);
-    // Оставляем только последние 10 записей
-    leaderboard = leaderboard.slice(0, 10);
+    recentSets.push(entry);
+    // Сортируем по времени добавления (по убыванию) и оставляем только последние 10 записей
+    recentSets.sort((a, b) => b.timestamp - a.timestamp);
+    recentSets = recentSets.slice(0, 10);
     // Сохраняем в localStorage
-    localStorage.setItem('leaderboard', JSON.stringify(leaderboard));
-    displayLeaderboard();
+    localStorage.setItem('recentSets', JSON.stringify(recentSets));
+    displayRecentSets();
 }
 
-// Функция для отображения таблицы лидеров
-function displayLeaderboard() {
-    leaderboardBody.innerHTML = '';
-    leaderboard.forEach((entry, index) => {
+// Функция для отображения таблицы последних 10 наборов
+function displayRecentSets() {
+    recentSetsBody.innerHTML = '';
+    recentSets.forEach((entry, index) => {
         const row = document.createElement('tr');
         row.innerHTML = `
             <td>${index + 1}</td>
-            <td>${entry.nickname}</td>
             <td>${entry.score}</td>
             <td>${entry.errorRate}%</td>
             <td>${entry.speed}</td>
         `;
-        leaderboardBody.appendChild(row);
+        recentSetsBody.appendChild(row);
     });
-
-    // Показываем место пользователя, если никнейм введен
-    if (nicknameInput.value) {
-        const userEntry = leaderboard.find(entry => entry.nickname === nicknameInput.value && entry.password === passwordInput.value);
-        if (userEntry) {
-            const userRank = leaderboard.indexOf(userEntry) + 1;
-            userRankElement.textContent = `Ваше место: ${userRank} (Слов: ${userEntry.score}, Ошибки: ${userEntry.errorRate}%, Скорость: ${userEntry.speed} зн/мин)`;
-        } else {
-            userRankElement.textContent = 'Ваш результат не найден. Проверьте никнейм и пароль.';
-        }
-    }
 }
+
+// Обработчик нажатия кнопки "Начать"
+startGameButton.addEventListener('click', () => {
+    // Выбираем набор слов
+    const selectedSet = wordSetSelect.value;
+    if (selectedSet === 'common') {
+        words = commonWords;
+    } else if (selectedSet === 'bigrams') {
+        words = bigrams;
+    } else if (selectedSet === 'trigrams') {
+        words = trigrams;
+    }
+
+    // Сбрасываем состояние игры
+    currentIndex = 0;
+    wordCount = 0;
+    timeLeft = 60;
+    totalAttempts = 0;
+    errorAttempts = 0;
+    correctCharacters = 0;
+    startTime = null;
+    timerRunning = false;
+    wordCounterElement.textContent = wordCount;
+    timerElement.textContent = timeLeft;
+    errorRateElement.textContent = '0%';
+    speedElement.textContent = '0';
+    textInput.disabled = false;
+
+    // Скрываем выбор набора слов и показываем элементы игры
+    wordSetSelection.style.display = 'none';
+    statsElement.style.display = 'flex';
+    wordDisplayElement.style.display = 'block';
+    inputContainerElement.style.display = 'block';
+
+    // Обновляем слова
+    updateWords();
+});
 
 // Обработчик ввода
 textInput.addEventListener('input', (e) => {
@@ -217,34 +285,5 @@ textInput.addEventListener('keypress', (e) => {
     }
 });
 
-// Обработчик отправки результата
-submitScoreButton.addEventListener('click', () => {
-    const nickname = nicknameInput.value.trim();
-    const password = passwordInput.value.trim();
-
-    if (nickname && password) {
-        const errorRate = totalAttempts > 0 ? (errorAttempts / totalAttempts) * 100 : 0;
-        const speed = parseInt(speedElement.textContent);
-        updateLeaderboard(nickname, wordCount, errorRate, speed);
-        nicknameForm.style.display = 'none';
-        // Сбрасываем игру
-        wordCount = 0;
-        timeLeft = 60;
-        totalAttempts = 0;
-        errorAttempts = 0;
-        correctCharacters = 0;
-        startTime = null;
-        wordCounterElement.textContent = wordCount;
-        timerElement.textContent = timeLeft;
-        errorRateElement.textContent = '0%';
-        speedElement.textContent = '0';
-        textInput.disabled = false;
-        updateWords();
-    } else {
-        alert('Пожалуйста, введите никнейм и пароль!');
-    }
-});
-
 // Инициализация при загрузке страницы
-updateWords();
-displayLeaderboard();
+displayRecentSets();
