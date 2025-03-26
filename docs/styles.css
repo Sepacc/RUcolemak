@@ -118,7 +118,33 @@ h2 {
     border-color: #ff0000;
 }
 
-.recent-sets {
+.nickname-form {
+    margin: 20px 0;
+}
+
+.nickname-form input {
+    padding: 10px;
+    margin: 5px;
+    font-size: 16px;
+    border: 2px solid #ccc;
+    border-radius: 5px;
+}
+
+.nickname-form button {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.nickname-form button:hover {
+    background-color: #0056b3;
+}
+
+.leaderboard {
     margin: 20px 0;
 }
 
@@ -136,6 +162,12 @@ th, td {
 
 th {
     background-color: #f0f0f0;
+    font-weight: bold;
+}
+
+.user-rank {
+    margin-top: 10px;
+    font-size: 16px;
     font-weight: bold;
 }
 
