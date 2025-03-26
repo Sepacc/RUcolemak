@@ -23,11 +23,11 @@
 ## Циферки и таблицы
 Сравнение распределения частоты букв в QWERTY и COLEMAK
 
-[img](https://leonardo.osnova.io/72f66a57-9b97-5582-8724-45f107bac3a3)
+![img](https://leonardo.osnova.io/72f66a57-9b97-5582-8724-45f107bac3a3)
 
 А так же ЙЦУКЕН и ЯХЗ
 
-[img](https://leonardo.osnova.io/607b5a3a-a10c-5c07-b863-383342947428)
+![img](https://imgur.com/a/colemakru-PhpPMpP)
 
 # Установка
 wip
