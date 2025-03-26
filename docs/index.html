@@ -34,20 +34,30 @@
             <input type="text" id="text-input" placeholder="Введите слово здесь..." autocomplete="off">
         </div>
 
-        <!-- Таблица последних 10 наборов -->
-        <div class="recent-sets">
-            <h2>Последние 10 наборов</h2>
-            <table id="recent-sets-table">
+        <!-- Форма для ввода никнейма и пароля (показывается после окончания времени) -->
+        <div class="nickname-form" id="nickname-form" style="display: none;">
+            <h2>Время вышло! Введите никнейм и пароль</h2>
+            <input type="text" id="nickname-input" placeholder="Ваш никнейм" autocomplete="off">
+            <input type="password" id="password-input" placeholder="Пароль" autocomplete="off">
+            <button id="submit-score">Сохранить результат</button>
+        </div>
+
+        <!-- Таблица лидеров -->
+        <div class="leaderboard">
+            <h2>Таблица лидеров (последние 10)</h2>
+            <table id="leaderboard-table">
                 <thead>
                     <tr>
-                        <th>№</th>
+                        <th>Место</th>
+                        <th>Никнейм</th>
                         <th>Слов</th>
                         <th>Ошибки</th>
                         <th>Скорость (зн/мин)</th>
                     </tr>
                 </thead>
-                <tbody id="recent-sets-body"></tbody>
+                <tbody id="leaderboard-body"></tbody>
             </table>
+            <div class="user-rank" id="user-rank"></div>
         </div>
 
         <!-- Плейсхолдер для изображения клавиатуры -->
